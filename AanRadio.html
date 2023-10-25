@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aan Radio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #007BFF;
+        }
+
+        h1 {
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        select#channelSelect {
+            width: 200px; 
+            height: 30px; 
+            font-size: 14px; 
+        }
+
+        #controls {
+            margin-top: 10px;
+        }
+
+        #nextButton,
+        #prevButton {
+            margin: 0 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #fff;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            select#channelSelect {
+                width: 150px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Aan Radio</h1>
+    <audio id="radio" controls>
+        <source id="radioSource" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Pilih Channel:</h2>
+    <select id="channelSelect">
+        <option value="channel1">Channel 1</option>
+        <option value="channel2">Channel 2</option>
+        <option value="channel3">Channel 3</option>
+        <option value="channel4">Channel 4</option>
+        <option value="channel5">Channel 5</option>
+    </select>
+
+    <div id="controls">
+        <button id="prevButton">Previous</button>
+        <button id="nextButton">Next</button>
+    </div>
+
+    <script>
+        const radio = document.getElementById("radio");
+        const radioSource = document.getElementById("radioSource");
+        const channelSelect = document.getElementById("channelSelect");
+        const nextButton = document.getElementById("nextButton");
+        const prevButton = document.getElementById("prevButton");
+        
+        let currentChannelIndex = 0;
+
+        const channels = [
+            "https://live.nagaswarafm.com:8088/stream", //nagaswarafm
+            "https://c5.siar.us/proxy/ssfm/stream", //suarasurabaya
+            "https://n0b.radiojar.com/7csmg90fuqruv?rj-ttl=5&rj-tok=AAABi102q3gAycT21RlCgCAMEA",
+            "https://server.radioimeldafm.co.id/radio/8040/gajahmadafm", //gajahmadafm
+            "https://n07.rcs.revma.com/1q762wy5a9hvv?rj-ttl=5&rj-tok=AAABi107NuEACNWwOPSVBG2HNA"
+        ];
+
+        channelSelect.addEventListener("change", function() {
+            const selectedChannel = channelSelect.value;
+            const channelIndex = channels.indexOf(radioSource.src);
+            currentChannelIndex = channelIndex;
+            radioSource.src = channels[channelIndex];
+            radio.load();
+        });
+
+        nextButton.addEventListener("click", function() {
+            currentChannelIndex = (currentChannelIndex + 1) % channels.length;
+            radioSource.src = channels[currentChannelIndex];
+            radio.load();
+            channelSelect.selectedIndex = currentChannelIndex;
+        });
+
+        prevButton.addEventListener("click", function() {
+            currentChannelIndex = (currentChannelIndex - 1 + channels.length) % channels.length;
+            radioSource.src = channels[currentChannelIndex];
+            radio.load();
+            channelSelect.selectedIndex = currentChannelIndex;
+        });
+
+        radioSource.src = channels[0];
+        radio.load();
+    </script>
+</body>
+</html>
